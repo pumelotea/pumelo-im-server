@@ -16,7 +16,6 @@
 	firendId,
 	uid,
 	firendUid,
-	remarkName
 }
 ```
 ### 群组表
@@ -24,15 +23,8 @@
 {
 	groupId,
 	groupName,
-}
-```
-
-### 用户-群组表
-```
-{
-	userGroupId,
-	uid,
-	groupId
+	uid
+	
 }
 ```
 ### 群组-成员表
