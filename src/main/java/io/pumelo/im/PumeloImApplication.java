@@ -8,6 +8,10 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @SpringBootApplication
 public class PumeloImApplication {
 
+    /**
+     * ws配置
+     * @return
+     */
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
