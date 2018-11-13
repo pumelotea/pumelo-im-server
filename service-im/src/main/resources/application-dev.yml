@@ -1,0 +1,11 @@
+spring:
+      jpa:
+        show-sql: true
+      datasource:
+        url:  jdbc:mysql://10.211.55.3:3306/pumelo_im?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+#        url:  jdbc:mysql://127.0.0.1:4000/app_db?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+        username: root
+        password: zhufeng
+      redis:
+        host: 10.211.55.3
+        password:

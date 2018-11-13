@@ -1,32 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.pumelo.im</groupId>
-    <artifactId>pumelo-im</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>io.pumelo</groupId>
+    <artifactId>im</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <springfoxSwaggerVersion>2.5.0</springfoxSwaggerVersion>
+        <mysqlConnectorVersion>5.1.38</mysqlConnectorVersion>
+        <druidVersion>1.1.9</druidVersion>
+        <fastjsonVersion>1.2.30</fastjsonVersion>
+        <commonsLang3Version>3.4</commonsLang3Version>
+        <commonsCodecVersion>1.10</commonsCodecVersion>
+        <commonsCollectionsVersion>3.2.2</commonsCollectionsVersion>
+        <commonsBeanutilsVersion>1.9.2</commonsBeanutilsVersion>
+        <jsonwebtokenVersion>0.7.0</jsonwebtokenVersion>
+        <httpclientVersion>4.5.3</httpclientVersion>
+        <zxingVersion>3.3.0</zxingVersion>
+        <influxdbVersion>2.7</influxdbVersion>
+        <httpmimeVersion>4.5.2</httpmimeVersion>
+        <jdomVersion>2.0.2</jdomVersion>
     </properties>
 
+    <modules>
+        <module>service-backend</module>
+        <module>mod-db-base</module>
+        <module>mod-common</module>
+        <module>mod-utils</module>
+        <module>mod-redis</module>
+        <module>mod-swagger</module>
+        <module>mod-error</module>
+        <module>mod-aop</module>
+        <module>mod-sms</module>
+        <module>mod-ali-oss</module>
+        <module>mod-cors-filter</module>
+        <module>mod-service-init</module>
+        <module>mod-idgens</module>
+        <module>mod-mail</module>
+        <module>mod-authorizion</module>
+        <module>mod-permission</module>
+        <module>brg-data</module>
+        <module>service-im</module>
+        <module>mod-activemq</module>
+    </modules>
 
     <dependencies>
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjsonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.16.22</version>
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>mod-base-db</module>
-        <module>server-im</module>
-    </modules>
 
+    <!--依赖管理-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -38,4 +87,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 </project>
