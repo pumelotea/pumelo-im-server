@@ -2,6 +2,7 @@ package io.pumelo.data.im.entity;
 
 
 import io.pumelo.db.entity.AbstractBaseEntity;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

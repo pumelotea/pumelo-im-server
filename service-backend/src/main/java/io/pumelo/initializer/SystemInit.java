@@ -5,8 +5,6 @@ import io.pumelo.common.basebean.PermissionType;
 import io.pumelo.common.entity.RoleTag;
 import io.pumelo.data.backend.entity.*;
 import io.pumelo.data.backend.repo.*;
-import io.pumelo.data.backend.entity.*;
-import io.pumelo.data.backend.repo.*;
 import io.pumelo.permission.annotation.PermissionRegister;
 import io.pumelo.redis.ObjectRedis;
 import io.pumelo.service.PermissionService;
