@@ -1,5 +1,9 @@
 package io.pumelo.data.im.entity;
 
+import io.pumelo.db.entity.AbstractBaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +11,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class UserEntity  extends AbstractBaseEntity {
 
     @Id
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '用户id 数字编号'")

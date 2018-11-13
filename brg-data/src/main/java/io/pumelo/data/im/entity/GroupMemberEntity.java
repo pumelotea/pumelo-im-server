@@ -1,13 +1,18 @@
 package io.pumelo.data.im.entity;
 
 
+import io.pumelo.db.entity.AbstractBaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "group_member")
-public class GroupMemberEntity {
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class GroupMemberEntity  extends AbstractBaseEntity {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(generator = "uuid2")

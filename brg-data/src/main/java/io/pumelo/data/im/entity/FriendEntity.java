@@ -3,12 +3,15 @@ package io.pumelo.data.im.entity;
 
 import io.pumelo.db.entity.AbstractBaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "friend")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class FriendEntity extends AbstractBaseEntity {
 
     @Id
