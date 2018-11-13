@@ -1,9 +1,9 @@
 package im.controller;
 
 import com.alibaba.fastjson.JSON;
-import io.pumelo.im.model.Message;
-import io.pumelo.im.model.User;
-import io.pumelo.im.utils.ChineseName;
+import im.model.Message;
+import im.model.User;
+import im.utils.ChineseName;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import static io.pumelo.im.IMContext.onlineUsers;
+import static im.IMContext.onlineUsers;
+
 
 @ServerEndpoint(value = "/chat")
 @Component

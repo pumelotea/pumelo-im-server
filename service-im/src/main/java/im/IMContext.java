@@ -1,6 +1,7 @@
 package im;
 
-import io.pumelo.im.model.User;
+
+import im.model.User;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
