@@ -108,5 +108,12 @@ public class GroupService {
         return null;
     }
 
+    /**
+     * 备注好友
+     * @return
+     */
+    public ApiResponse remarkGroup(String groupId,String remark){
+        return null;
+    }
 
 }
