@@ -25,4 +25,6 @@ public class FriendEntity extends AbstractBaseEntity {
 
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '好友id'")
     private String friendUid;
+
+
 }
