@@ -20,6 +20,41 @@
             <artifactId>brg-data</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-utils</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-cors-filter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-aop</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-redis</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-error</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-authorizion</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

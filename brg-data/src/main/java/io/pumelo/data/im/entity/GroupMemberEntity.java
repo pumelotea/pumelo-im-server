@@ -24,4 +24,12 @@ public class GroupMemberEntity  extends AbstractBaseEntity {
 
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '成员用户id'")
     private String uid;
+
+    public GroupMemberEntity(String groupId, String uid) {
+        this.groupId = groupId;
+        this.uid = uid;
+    }
+
+    public GroupMemberEntity() {
+    }
 }

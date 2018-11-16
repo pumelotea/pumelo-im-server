@@ -19,7 +19,7 @@ public class FriendAskEntity extends AbstractBaseEntity {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(generator = "uuid2")
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '主键'")
-    private String FriendAskId;
+    private String friendAskId;
 
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '我的id'")
     private String uid;
@@ -35,4 +35,14 @@ public class FriendAskEntity extends AbstractBaseEntity {
 
     @Column(nullable = false, columnDefinition = "bit(1) COMMENT '是否处理'")
     private Boolean isProcess;
+
+    public static FriendAskEntity ask(String uid,String targetUid,String reason){
+        FriendAskEntity friendAskEntity = new FriendAskEntity();
+        friendAskEntity.uid  = uid;
+        friendAskEntity.targetUid = targetUid;
+        friendAskEntity.reason = reason;
+        friendAskEntity.isAgree = false;
+        friendAskEntity.isProcess = false;
+        return friendAskEntity;
+    }
 }

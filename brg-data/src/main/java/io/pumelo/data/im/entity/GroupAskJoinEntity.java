@@ -35,4 +35,14 @@ public class GroupAskJoinEntity extends AbstractBaseEntity {
 
     @Column(nullable = false, columnDefinition = "bit(1) COMMENT '是否处理'")
     private Boolean isProcess;
+
+    public static GroupAskJoinEntity ask(String groupId, String uid, String reason) {
+        GroupAskJoinEntity groupAskJoinEntity = new GroupAskJoinEntity();
+        groupAskJoinEntity.groupId = groupId;
+        groupAskJoinEntity.uid = uid;
+        groupAskJoinEntity.reason = reason;
+        groupAskJoinEntity.isAgree = false;
+        groupAskJoinEntity.isProcess = false;
+        return groupAskJoinEntity;
+    }
 }

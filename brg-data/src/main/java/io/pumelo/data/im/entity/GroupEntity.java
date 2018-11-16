@@ -25,4 +25,11 @@ public class GroupEntity  extends AbstractBaseEntity {
 
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '所属用户'")
     private String uid;
+
+    public static GroupEntity create(String groupName,String uid){
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.groupName = groupName;
+        groupEntity.uid = uid;
+        return groupEntity;
+    }
 }

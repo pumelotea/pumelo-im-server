@@ -26,5 +26,11 @@ public class FriendEntity extends AbstractBaseEntity {
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '好友id'")
     private String friendUid;
 
+    public static FriendEntity makeFriend(String uid,String friendUid){
+        FriendEntity friendEntity = new FriendEntity();
+        friendEntity.uid = uid;
+        friendEntity.friendUid = friendUid;
+        return friendEntity;
+    }
 
 }
