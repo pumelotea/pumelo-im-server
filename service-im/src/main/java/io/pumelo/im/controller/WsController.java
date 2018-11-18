@@ -7,8 +7,11 @@ import io.pumelo.im.model.SessionUser;
 import io.pumelo.redis.ObjectRedis;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -20,7 +23,7 @@ import java.io.IOException;
 /**
  * 这里的token 不是jwt
  */
-@ServerEndpoint(value = "/v1")
+@ServerEndpoint(value = "/v1/{token}")
 @Component
 public class WsController {
     @Autowired
@@ -29,7 +32,7 @@ public class WsController {
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
-        String token = session.getRequestParameterMap().get("token").get(0);
+        String token = session.getPathParameters().get("token");
         //鉴权
         String uid = redis.get(token,String.class);
         if (StringUtils.isBlank(uid)){

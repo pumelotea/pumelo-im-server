@@ -65,6 +65,7 @@ public class UserService {
     @Transactional
     public ApiResponse<UserVo> register(String name, String password) {
         UserEntity userEntity = new UserEntity();
+        userEntity.setSalt(UUID.randomUUID().toString());
         userEntity.setName(name);
         userEntity.setPassword(EncryptionUtils.sha1(password+userEntity.getSalt()));
         userEntity.setUid(UUID.randomUUID().toString());//FIXME 改成数字ID
