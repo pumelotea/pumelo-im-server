@@ -1,5 +1,6 @@
 package io.pumelo.im.controller;
 
+import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.vo.AccessTokenVo;
 import io.pumelo.data.im.vo.user.UserVo;
@@ -25,6 +26,7 @@ public class UserController {
         return userService.register(name, password);
     }
 
+    @AuthFilter
     @PostMapping("/logout")
     public ApiResponse logout() {
         return userService.logout();
