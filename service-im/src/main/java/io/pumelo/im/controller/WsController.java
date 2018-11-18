@@ -20,7 +20,7 @@ import java.io.IOException;
 /**
  * 这里的token 不是jwt
  */
-@ServerEndpoint(value = "/v1/{token}")
+@ServerEndpoint(value = "/v1")
 @Component
 public class WsController {
     @Autowired
@@ -29,7 +29,7 @@ public class WsController {
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
-        String token = session.getPathParameters().get("token");
+        String token = session.getRequestParameterMap().get("token").get(0);
         //鉴权
         String uid = redis.get(token,String.class);
         if (StringUtils.isBlank(uid)){
