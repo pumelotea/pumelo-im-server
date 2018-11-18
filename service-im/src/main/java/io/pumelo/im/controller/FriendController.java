@@ -1,4 +1,4 @@
-package io.pumleo.im.controller;
+package io.pumelo.im.controller;
 
 public class FriendController {
 }

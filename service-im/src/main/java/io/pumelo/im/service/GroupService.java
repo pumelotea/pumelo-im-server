@@ -1,6 +1,5 @@
-package io.pumleo.im.service;
+package io.pumelo.im.service;
 
-import im.model.APIRespones;
 import io.pumelo.common.errorcode.IMCode;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.GroupAskJoinEntity;
@@ -285,7 +284,7 @@ public class GroupService {
     }
 
 
-    public APIRespones search() {
+    public ApiResponse search() {
         return null;
     }
 }

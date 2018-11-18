@@ -1,4 +1,4 @@
-package io.pumleo.im.service;
+package io.pumelo.im.service;
 
 import io.pumelo.common.errorcode.IMCode;
 import io.pumelo.common.web.ApiResponse;

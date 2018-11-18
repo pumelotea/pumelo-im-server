@@ -1,4 +1,4 @@
-package io.pumleo.im.service;
+package io.pumelo.im.service;
 
 import io.pumelo.authorizion.AbstractAuthTokenFilter;
 import io.pumelo.authorizion.IdGetter;

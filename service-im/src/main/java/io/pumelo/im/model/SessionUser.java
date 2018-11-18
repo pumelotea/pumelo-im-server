@@ -1,4 +1,4 @@
-package im.model;
+package io.pumelo.im.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -6,17 +6,15 @@ import lombok.Data;
 import javax.websocket.Session;
 
 @Data
-public class User {
+public class SessionUser {
     private String uid;
-    private String name;
     private long loginAt;
 
     @JsonIgnore
     private transient Session session;
 
-    public User(String uid, String name, long loginAt,Session session) {
+    public SessionUser(String uid,long loginAt, Session session) {
         this.uid = uid;
-        this.name = name;
         this.loginAt = loginAt;
         this.session = session;
     }
