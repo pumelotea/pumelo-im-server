@@ -13,9 +13,9 @@ public class SessionUser {
     @JsonIgnore
     private transient Session session;
 
-    public SessionUser(String uid,long loginAt, Session session) {
+    public SessionUser(String uid, Session session) {
         this.uid = uid;
-        this.loginAt = loginAt;
+        this.loginAt = System.currentTimeMillis();
         this.session = session;
     }
 }

@@ -8,15 +8,23 @@ import java.util.UUID;
 @Data
 public class Message {
     private String messageId;
-    private String msgType;//SYS ,USER ,GROUP
-    private String contentType;//内容类型, //图片，文件，文本
+    private String code="0";
+    private String msgType;//SYS ,USER ,GROUP,HEART
+    private String contentType;//内容类型, //PICTURE,TEXT,FILE
     private String content;
     private String from;
     private String to;//由类型决定是好友消息还是群组消息
     private long sentAt;//发送时间
 
+    public static Message makeHeartMsg(){
+        Message message = new Message();
+        message.msgType = "HEART";
+        message.from = "SYS";
+        message.sentAt = System.currentTimeMillis();
+        return message;
+    }
 
-    public static Message makeSysMsg(String to,String content,String contentType){
+    public static Message makeSysMsg(String to,String content,String contentType,String code){
         Message message = new Message();
         message.messageId = UUID.randomUUID().toString();
         message.msgType = "SYS";
@@ -25,6 +33,7 @@ public class Message {
         message.to = to;
         message.content = content;
         message.contentType =contentType;
+        message.code = code;
         return message;
     }
 
@@ -56,4 +65,21 @@ public class Message {
         return JSON.toJSONString(this);
     }
 
+    /**
+     * 检查消息体
+     * @return
+     */
+    public boolean check(){
+        return true;
+    }
+
+    /**
+     * 把消息体拼装完整
+     * @param from
+     */
+    public void makeComplete(String from){
+        this.sentAt = System.currentTimeMillis();
+        this.messageId = UUID.randomUUID().toString();
+        this.from = from;
+    }
 }
