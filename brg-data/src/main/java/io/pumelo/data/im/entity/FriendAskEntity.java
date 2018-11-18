@@ -11,7 +11,7 @@ import javax.persistence.*;
  * 加群申请记录表
  */
 @Entity
-@Table(name = "friend_ask")
+@Table(name = "im_friend_ask")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class FriendAskEntity extends AbstractBaseEntity {

@@ -28,7 +28,8 @@ public class WsController {
 
 
     @OnOpen
-    public void onOpen(@PathVariable String token, Session session) throws IOException {
+    public void onOpen(Session session) throws IOException {
+        String token = session.getPathParameters().get("token");
         //鉴权
         String uid = redis.get(token,String.class);
         if (StringUtils.isBlank(uid)){

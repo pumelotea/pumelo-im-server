@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "group_member")
+@Table(name = "im_group_member")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class GroupMemberEntity  extends AbstractBaseEntity {

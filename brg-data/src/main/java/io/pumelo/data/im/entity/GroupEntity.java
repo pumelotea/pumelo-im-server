@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "group")
+@Table(name = "im_group")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class GroupEntity  extends AbstractBaseEntity {

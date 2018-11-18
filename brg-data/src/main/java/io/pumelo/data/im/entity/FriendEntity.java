@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "friend")
+@Table(name = "im_friend")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class FriendEntity extends AbstractBaseEntity {

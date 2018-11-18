@@ -17,12 +17,12 @@ public interface RoleEntityRepo extends JpaRepository<RoleEntity,String> {
     RoleEntity findByCreatedBy(String system);
     RoleEntity findByRoleIdAndIsTrashFalse(String roleId);
 
-    @Query("select new io.pumelo.data.vo.role.RoleInfoVo(r.roleId,r.roleName,r.roleDescription) " +
+    @Query("select new io.pumelo.data.backend.vo.role.RoleInfoVo(r.roleId,r.roleName,r.roleDescription) " +
             "from RoleEntity r where r.isTrash = false")
     Page<RoleInfoVo> findPage(Pageable pageable);
 
 
-    @Query("select new io.pumelo.data.vo.role.RoleInfoVo(r.roleId,r.roleName,r.roleDescription) " +
+    @Query("select new io.pumelo.data.backend.vo.role.RoleInfoVo(r.roleId,r.roleName,r.roleDescription) " +
             "from RoleEntity r where r.isTrash = false")
     List<RoleInfoVo> findList();
 }

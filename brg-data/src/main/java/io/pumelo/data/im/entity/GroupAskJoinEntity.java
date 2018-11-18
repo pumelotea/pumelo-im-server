@@ -11,7 +11,7 @@ import javax.persistence.*;
  * 加群申请记录表
  */
 @Entity
-@Table(name = "group_ask_join")
+@Table(name = "im_group_ask_join")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class GroupAskJoinEntity extends AbstractBaseEntity {

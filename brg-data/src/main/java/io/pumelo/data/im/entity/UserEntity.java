@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user")
+@Table(name = "im_user")
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UserEntity  extends AbstractBaseEntity {
