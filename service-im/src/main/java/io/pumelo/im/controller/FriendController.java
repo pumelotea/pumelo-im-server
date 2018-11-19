@@ -1,12 +1,12 @@
 package io.pumelo.im.controller;
 
+import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.FriendAskEntity;
 import io.pumelo.data.im.vo.friend.FriendVo;
 import io.pumelo.im.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,31 +15,45 @@ public class FriendController {
     @Autowired
     private FriendService friendService;
 
-    public ApiResponse askAddFriend(String targetUid, String reason){
+    @AuthFilter
+    @PostMapping("/ask_friend")
+    public ApiResponse askAddFriend(@RequestParam String targetUid, @RequestParam String reason) {
         return friendService.askAddFriend(targetUid, reason);
     }
 
-    public ApiResponse reviewAskFriend(String friendAskId,Boolean isAgree){
+    @AuthFilter
+    @PutMapping("/ask_friend/{friendAskId}")
+    public ApiResponse reviewAskFriend(@PathVariable String friendAskId, @RequestParam Boolean isAgree) {
         return friendService.reviewAskFriend(friendAskId, isAgree);
     }
 
-    public ApiResponse<List<FriendAskEntity>> getReviewAskList(){
+    @AuthFilter
+    @GetMapping("/ask_friends")
+    public ApiResponse<List<FriendAskEntity>> getReviewAskList() {
         return friendService.getReviewAskList();
     }
 
-    public ApiResponse deleteFriend(String friendUid,Boolean isBoth){
+    @AuthFilter
+    @DeleteMapping("/friend/{friendUid}")
+    public ApiResponse deleteFriend(@PathVariable String friendUid, @RequestParam Boolean isBoth) {
         return friendService.deleteFriend(friendUid, isBoth);
     }
 
-    public ApiResponse<List<FriendVo>> getFriendList(){
+    @AuthFilter
+    @GetMapping("/friends")
+    public ApiResponse<List<FriendVo>> getFriendList() {
         return friendService.getFriendList();
     }
 
-    public ApiResponse<FriendVo> getFriend(String uid){
+    @AuthFilter
+    @GetMapping("/friend/{uid}")
+    public ApiResponse<FriendVo> getFriend(@PathVariable String uid) {
         return friendService.getFriend(uid);
     }
 
-    public ApiResponse<FriendVo> remarkFriend(String uid,String remark){
+    @AuthFilter
+    @PutMapping("/friend/{uid}/remark")
+    public ApiResponse<FriendVo> remarkFriend(@PathVariable String uid, @RequestParam String remark) {
         return friendService.remarkFriend(uid, remark);
     }
 }

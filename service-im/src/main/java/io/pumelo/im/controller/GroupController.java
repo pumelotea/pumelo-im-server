@@ -1,12 +1,13 @@
 package io.pumelo.im.controller;
 
+import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.GroupAskJoinEntity;
 import io.pumelo.data.im.entity.GroupEntity;
 import io.pumelo.data.im.entity.GroupMemberEntity;
 import io.pumelo.im.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +21,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse<GroupEntity> createGroup(String groupName) {
+    @AuthFilter
+    @PostMapping("/group")
+    public ApiResponse<GroupEntity> createGroup(@RequestParam String groupName) {
        return groupService.createGroup(groupName);
     }
 
@@ -29,7 +32,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse disbandGroup(String groupId) {
+    @AuthFilter
+    @DeleteMapping("/group/{groupId}")
+    public ApiResponse disbandGroup(@PathVariable String groupId) {
         return groupService.disbandGroup(groupId);
     }
 
@@ -38,6 +43,8 @@ public class GroupController {
      * 群不一定是自己创建的
      * @return
      */
+    @AuthFilter
+    @GetMapping("/groups")
     public ApiResponse<List<GroupEntity>> getGroupList() {
         return groupService.getGroupList();
     }
@@ -47,7 +54,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse<GroupEntity> getGroupInfo(String groupId) {
+    @AuthFilter
+    @GetMapping("/group/{groupId}")
+    public ApiResponse<GroupEntity> getGroupInfo(@PathVariable String groupId) {
         return groupService.getGroupInfo(groupId);
     }
 
@@ -56,7 +65,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse<List<GroupMemberEntity>> getGroupMemberList(String groupId) {
+    @AuthFilter
+    @GetMapping("/group/{groupId}/members")
+    public ApiResponse<List<GroupMemberEntity>> getGroupMemberList(@PathVariable String groupId) {
         return groupService.getGroupMemberList(groupId);
     }
 
@@ -65,7 +76,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse<GroupMemberEntity> getGroupMember(String groupId, String uid) {
+    @AuthFilter
+    @GetMapping("/group/{groupId}/member/{uid}")
+    public ApiResponse<GroupMemberEntity> getGroupMember(@PathVariable String groupId, @PathVariable String uid) {
         return groupService.getGroupMember(groupId, uid);
     }
 
@@ -74,7 +87,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse updateGroupInfo(String groupId, String groupName) {
+    @AuthFilter
+    @PutMapping("/group/{groupId}/group_name")
+    public ApiResponse updateGroupInfo(@PathVariable String groupId, @RequestParam String groupName) {
         return groupService.updateGroupInfo(groupId, groupName);
     }
 
@@ -83,7 +98,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse exitGroup(String groupId) {
+    @AuthFilter
+    @DeleteMapping("/group/{groupId}/member/self")
+    public ApiResponse exitGroup(@PathVariable String groupId) {
         return groupService.exitGroup(groupId);
     }
 
@@ -92,7 +109,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse askJoinGroup(String groupId, String reason) {
+    @AuthFilter
+    @PostMapping("/ask_group")
+    public ApiResponse askJoinGroup(@RequestParam String groupId,@RequestParam String reason) {
         return groupService.askJoinGroup(groupId, reason);
     }
 
@@ -101,7 +120,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse reviewJoinUser(String groupAskId, Boolean isAgree) {
+    @AuthFilter
+    @PutMapping("/ask_group/{groupAskId}")
+    public ApiResponse reviewJoinUser(@PathVariable String groupAskId,@RequestParam Boolean isAgree) {
         return groupService.reviewJoinUser(groupAskId, isAgree);
     }
 
@@ -110,6 +131,8 @@ public class GroupController {
      *
      * @return
      */
+    @AuthFilter
+    @GetMapping("/ask_groups")
     public ApiResponse<List<GroupAskJoinEntity>> getReviewAskJoinGroupList() {
         return groupService.getReviewAskJoinGroupList();
     }
@@ -119,7 +142,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse deleteMember(String groupId, String uid) {
+    @AuthFilter
+    @DeleteMapping("/group/{groupId}/member/{uid}")
+    public ApiResponse deleteMember(@PathVariable String groupId,@PathVariable String uid) {
         return groupService.deleteMember(groupId, uid);
     }
 
@@ -129,7 +154,9 @@ public class GroupController {
      *
      * @return
      */
-    public ApiResponse remarkGroup(String groupId, String remark) {
+    @AuthFilter
+    @PutMapping("/group/{groupId}/remark")
+    public ApiResponse remarkGroup(@PathVariable String groupId,@RequestParam String remark) {
         return groupService.remarkGroup(groupId, remark);
     }
 }
