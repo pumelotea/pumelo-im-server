@@ -30,6 +30,7 @@ public enum IMCode implements BaseErrorCode {
     FRIEND_EXISTS(2002,"好友已存在"),
     GROUP_NOT_EXISTS(3001,"群组不存在"),
     MEMBER_NOT_EXISTS(4001,"成员不存在"),
+    MEMBER_EXISTS(4002,"成员已存在"),
     ADMIN_EXIT_BAN(4002,"管理员禁止退出"),
     YOU_NOT_IN_GROUP(4003,"您不在该群组"),
     YOU_IN_GROUP(4004,"您已在该群组"),

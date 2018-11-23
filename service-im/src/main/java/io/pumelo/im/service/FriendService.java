@@ -59,15 +59,26 @@ public class FriendService {
         if (friendAskEntity == null){
             return ApiResponse.prompt(IMCode.FAIL);
         }
+        //检查是否是好友
+        FriendEntity friendEntityMySide = friendEntityRepo.findByUidAndFriendUid(authService.getId(), friendAskEntity.getTargetUid());
+        if (friendEntityMySide != null){
+            return ApiResponse.prompt(IMCode.FRIEND_EXISTS);
+        }
+
+
         friendAskEntity.setIsAgree(isAgree);
         friendAskEntity.setIsProcess(true);
         friendAskEntity = friendAskEntityRepo.save(friendAskEntity);
         if (friendAskEntity.getIsAgree()){
             //双向建立关系
+            FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getTargetUid(),authService.getId());
             FriendEntity friendEntityTo = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
-            FriendEntity friendEntityFrom = FriendEntity.makeFriend(friendAskEntity.getTargetUid(),friendAskEntity.getUid());
             friendEntityRepo.save(friendEntityTo);
-            friendEntityRepo.save(friendEntityFrom);
+            //判断是否是对方的单项好友
+            if (friendEntityFriendSide == null) {
+                FriendEntity friendEntityFrom = FriendEntity.makeFriend(friendAskEntity.getTargetUid(),friendAskEntity.getUid());
+                friendEntityRepo.save(friendEntityFrom);
+            }
         }
         return ApiResponse.prompt(IMCode.SC_OK);
     }

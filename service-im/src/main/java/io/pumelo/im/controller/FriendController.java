@@ -34,8 +34,8 @@ public class FriendController {
     }
 
     @AuthFilter
-    @DeleteMapping("/friend/{friendUid}")
-    public ApiResponse deleteFriend(@PathVariable String friendUid, @RequestParam Boolean isBoth) {
+    @DeleteMapping("/friend/{friendUid}/{isBoth}")
+    public ApiResponse deleteFriend(@PathVariable String friendUid, @PathVariable Boolean isBoth) {
         return friendService.deleteFriend(friendUid, isBoth);
     }
 

@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "user")
-public class UserEntity extends AbstractBaseEntity {
+public class BackendUserEntity extends AbstractBaseEntity {
 
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -38,11 +38,11 @@ public class UserEntity extends AbstractBaseEntity {
 
 
 
-    public UserEntity() {
+    public BackendUserEntity() {
 
     }
 
-    public UserEntity(String username, String password) {
+    public BackendUserEntity(String username, String password) {
         this.username = username;
         this.isEnable = true;
         this.salt = UUID.randomUUID().toString().replaceAll("-","");

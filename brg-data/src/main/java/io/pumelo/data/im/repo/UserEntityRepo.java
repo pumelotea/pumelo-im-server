@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserEntityRepo extends BaseDao<UserEntity, String> {
 
-    @Query(value = "select user from UserEntity user where user.uid = :uid and user.isTrash=false")
+    @Query(value = "select user from io.pumelo.data.im.entity.UserEntity user where user.uid = :uid and user.isTrash=false")
     UserEntity findByUid(@Param("uid") String uid);
 }

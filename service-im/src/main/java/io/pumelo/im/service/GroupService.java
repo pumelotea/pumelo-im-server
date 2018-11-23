@@ -206,6 +206,11 @@ public class GroupService {
         if (group == null){
             ApiResponse.prompt(IMCode.GROUP_NOT_EXISTS);
         }
+        //检查是不是成员
+        GroupMemberEntity member = groupMemberEntityRepo.findMember(groupAskJoinEntity.getGroupId(), groupAskJoinEntity.getUid());
+        if (member != null){
+            return ApiResponse.prompt(IMCode.MEMBER_EXISTS);
+        }
         groupAskJoinEntity.setIsAgree(isAgree);
         groupAskJoinEntity.setIsProcess(true);
         groupAskJoinEntity = groupAskJoinEntityRepo.save(groupAskJoinEntity);

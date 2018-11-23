@@ -36,22 +36,18 @@ public class UserService {
      */
     public ApiResponse<AccessTokenVo> login(String uid, String password) {
         UserEntity userEntity =userEntityRepo.findByUid(uid);
-
         if(null == userEntity) {
             return ApiResponse.prompt(IMCode.ACCOUNT_NOT_EXISTS);
         }
-
         if (!userEntity.isAuthentication(password)){//密码输入有误
             return ApiResponse.prompt(IMCode.ACCOUNT_PWD_ERROR);
         }
-        String wsToken = UUID.randomUUID().toString();
         try {
             long nowMillis = System.currentTimeMillis();
             String accessToken = JwtUtils.createJWT(JwtConstant.JWT_SECRET,nowMillis,JwtConstant.JWT_ID,userEntity.getUid() , JwtConstant.JWT_TTL);
             long expiresAt = System.currentTimeMillis()+JwtConstant.JWT_TTL;
             AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken,"bearer",expiresAt/1000);
             objectRedis.add("user/"+userEntity.getUid(),JwtConstant.JWT_TTL/1000/60,accessTokenVo);
-            accessTokenVo.setWsToken(wsToken);
             return ApiResponse.ok(accessTokenVo);
         } catch (Exception e) {
             e.printStackTrace();

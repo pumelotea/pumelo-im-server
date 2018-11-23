@@ -36,7 +36,7 @@ public class SystemInit implements ServiceInit {
     @Autowired
     private RolePermissionEntityRepo rolePermissionEntityRepo;
     @Autowired
-    private UserEntityRepo userEntityRepo;
+    private BackendUserEntityRepo backendUserEntityRepo;
     @Autowired
     private UserRoleEntityRepo userRoleEntityRepo;
     @Autowired
@@ -152,12 +152,12 @@ public class SystemInit implements ServiceInit {
     }
 
     private void initUser(String roleId){
-        UserEntity rootUser = userEntityRepo.findByUsernameAndIsTrashFalse("root");
+        BackendUserEntity rootUser = backendUserEntityRepo.findByUsernameAndIsTrashFalse("root");
         if (rootUser == null) {
-            rootUser = new UserEntity();
+            rootUser = new BackendUserEntity();
             rootUser.createRootUser("root", "123456", "18368404489", "1139559925@qq.com");
             rootUser.setCreatedBy("system");
-            UserEntity save = userEntityRepo.save(rootUser);
+            BackendUserEntity save = backendUserEntityRepo.save(rootUser);
             if(save.getUserId() != null){
                 LOG.info(this,"初始化系统默认帐号成功");
             }else {

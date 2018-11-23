@@ -2,6 +2,7 @@ package io.pumelo.im.model;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
+import org.springframework.web.socket.TextMessage;
 
 import java.util.UUID;
 
@@ -63,6 +64,10 @@ public class Message {
 
     public String toJSON(){
         return JSON.toJSONString(this);
+    }
+
+    public TextMessage toTextMessage(){
+        return new TextMessage(this.toJSON());
     }
 
     /**
