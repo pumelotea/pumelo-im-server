@@ -47,6 +47,7 @@ public class UserService {
             String accessToken = JwtUtils.createJWT(JwtConstant.JWT_SECRET,nowMillis,JwtConstant.JWT_ID,userEntity.getUid() , JwtConstant.JWT_TTL);
             long expiresAt = System.currentTimeMillis()+JwtConstant.JWT_TTL;
             AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken,"bearer",expiresAt/1000);
+            accessTokenVo.setUid(uid);
             objectRedis.add("user/"+userEntity.getUid(),JwtConstant.JWT_TTL/1000/60,accessTokenVo);
             return ApiResponse.ok(accessTokenVo);
         } catch (Exception e) {

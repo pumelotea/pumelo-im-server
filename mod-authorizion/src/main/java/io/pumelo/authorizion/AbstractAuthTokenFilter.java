@@ -127,6 +127,4 @@ public abstract class AbstractAuthTokenFilter implements HandlerInterceptor,Secu
             e.printStackTrace();
         }
     }
-
-
 }

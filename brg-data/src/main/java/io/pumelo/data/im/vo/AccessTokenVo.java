@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class AccessTokenVo {
+    private String uid;
     private String accessToken;
     private String tokenType;
     private long expiresAt;

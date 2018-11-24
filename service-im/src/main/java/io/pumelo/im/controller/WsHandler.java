@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import io.pumelo.im.IMContext;
 import io.pumelo.im.model.Message;
 import io.pumelo.im.model.SessionUser;
+import io.pumelo.im.service.AuthService;
 import io.pumelo.redis.ObjectRedis;
+import io.pumelo.utils.IdealTokenUtils;
 import io.pumelo.utils.LOG;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +26,34 @@ public class WsHandler extends TextWebSocketHandler {
     @Autowired
     private ObjectRedis redis;
 
+    @Autowired
+    private AuthService authService;
+
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        super.afterConnectionClosed(session, status);
         //清除在线状态 2条
         SessionUser sessionUser = IMContext.sessionUsers.remove(session.getId());
         if (sessionUser != null) {
             IMContext.sessionUsers.remove(sessionUser.getUid());
+            LOG.info(this,"OFF LINE User:"+sessionUser.getUid()+" session:"+session.getId());
         }
+
+
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        super.afterConnectionEstablished(session);
-        String token = "";
-        session.sendMessage(new TextMessage("!1111111"));
-        //鉴权
-        String uid = redis.get(token, String.class);
+        String token ="bearer " + session.getUri().getRawQuery();
+        if (StringUtils.isBlank(token)) {
+            //返回token无效
+            IMContext.send(session,Message.makeSysMsg("", "auth fail", "TEXT", "1001"));
+            return;
+        }
+        String uid = IdealTokenUtils.getSubject(authService.getJwtSecret(), token);
         if (StringUtils.isBlank(uid)) {
             //返回token无效
-            IMContext.send(Message.makeSysMsg(uid, "auth fail", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg(uid, "auth fail", "TEXT", "1001"));
             return;
         }
 
@@ -53,9 +63,9 @@ public class WsHandler extends TextWebSocketHandler {
         //插入到在线用户表 2条 ，session-id 对应 用户 || uid 对应 用户
         IMContext.sessionUsers.put(session.getId(), sessionUser);
         IMContext.sessionUsers.put(uid, sessionUser);
-
+        LOG.info(this,"ON LINE User:"+sessionUser.getUid()+" session:"+session.getId());
         //返回连接成功
-        IMContext.send(Message.makeSysMsg(uid, "connected", "TEXT", "0"));
+        IMContext.send(session,Message.makeSysMsg(uid, "connected", "TEXT", "0"));
     }
 
     @Override
@@ -72,7 +82,7 @@ public class WsHandler extends TextWebSocketHandler {
             //心跳处理
             IMContext.sendHeart(session);
         } else {
-            IMContext.send(msg);
+            IMContext.sendToUser(msg);
         }
 
     }

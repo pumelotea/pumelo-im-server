@@ -19,54 +19,29 @@ public class IMContext {
     //全局群组缓存
     public static Hashtable<String, SessionGroup> sessionGroups = new Hashtable<>();
 
-    /**
-     * 消息发送方法
-     *
-     * @param message
-     */
-    public static void send(Message message) throws IOException {
-        if (message.getMsgType().equals("SYS")) {
-            if (!userIsOnline(message.getTo())) {
-                //离线消息存储
-                return;
-            }
-            WebSocketSession session = sessionUsers.get(message.getTo()).getSession();
-            if (!session.isOpen()){
-                //离线消息存储
-                return;
-            }
-            session.sendMessage(message.toTextMessage());
 
-        } else if (message.getMsgType().equals("USER")) {
-            if (!userIsOnline(message.getTo())) {
-                //离线消息存储
-                return;
-            }
-            WebSocketSession session = sessionUsers.get(message.getTo()).getSession();
-            if (!session.isOpen()){
-                //离线消息存储
-                return;
-            }
+    public static void send(WebSocketSession session,Message message) throws IOException {
+        if (session.isOpen()){
             session.sendMessage(message.toTextMessage());
-        } else if (message.getMsgType().equals("GROUP")) {
-            if (!groupIsInSession(message.getTo())) {
-                return;
-            }
-
-            SessionGroup sessionGroup = sessionGroups.get(message.getTo());
-            for (String uid : sessionGroup.getMemberSets()) {
-                if (!userIsOnline(uid)) {
-                    //离线消息存储
-                    continue;
-                }
-                WebSocketSession session = sessionUsers.get(message.getTo()).getSession();
-                if (!session.isOpen()){
-                    //离线消息存储
-                    continue;
-                }
-                session.sendMessage(message.toTextMessage());
-            }
+        }else {
+            //离线处理
         }
+    }
+
+
+    public static void sendToUser(Message message) throws IOException {
+        SessionUser sessionUser = sessionUsers.get(message.getTo());
+        if (sessionUser != null){
+            send(sessionUser.getSession(),message);
+
+
+        }else {
+           //离线处理
+        }
+    }
+
+    public static void sendToGroup(Message message){
+
     }
 
     public static void sendHeart(WebSocketSession session) throws IOException {

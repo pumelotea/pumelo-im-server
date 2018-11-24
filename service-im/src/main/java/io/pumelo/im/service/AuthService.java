@@ -18,7 +18,7 @@ public class AuthService extends AbstractAuthTokenFilter implements IdGetter<Str
     private ObjectRedis redis;
 
     @Override
-    protected String getJwtSecret() {
+    public String getJwtSecret() {
         return JwtConstant.JWT_SECRET;
     }
 
