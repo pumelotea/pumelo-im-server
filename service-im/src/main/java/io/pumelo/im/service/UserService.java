@@ -5,6 +5,7 @@ import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.UserEntity;
 import io.pumelo.data.im.repo.UserEntityRepo;
 import io.pumelo.data.im.vo.AccessTokenVo;
+import io.pumelo.data.im.vo.user.UserSearchVo;
 import io.pumelo.data.im.vo.user.UserVo;
 import io.pumelo.redis.ObjectRedis;
 import io.pumelo.utils.BeanUtils;
@@ -12,9 +13,14 @@ import io.pumelo.utils.EncryptionUtils;
 import io.pumelo.utils.jwt.JwtConstant;
 import io.pumelo.utils.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -84,7 +90,12 @@ public class UserService {
     }
 
 
-    public ApiResponse search(String keyword) {
-        return null;
+    public ApiResponse<Page<UserSearchVo>> search(String keyword, int page, int size) {
+        Page<UserEntity> listByKeyword = userEntityRepo.findListByKeyword("%"+keyword+"%", PageRequest.of(page, size));
+        List<UserSearchVo> voList = new ArrayList<>();
+        listByKeyword.getContent().forEach(userEntity -> {
+            voList.add(BeanUtils.copyAttrs(new UserSearchVo(),userEntity));
+        });
+        return ApiResponse.ok(new PageImpl<>(voList,PageRequest.of(page, size),listByKeyword.getTotalElements()));
     }
 }

@@ -3,11 +3,13 @@ package io.pumelo.im.controller;
 import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.FriendAskEntity;
+import io.pumelo.data.im.vo.askFriend.AskFriendVo;
 import io.pumelo.data.im.vo.friend.FriendVo;
 import io.pumelo.im.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,19 +19,19 @@ public class FriendController {
 
     @AuthFilter
     @PostMapping("/ask_friend")
-    public ApiResponse askAddFriend(@RequestParam String targetUid, @RequestParam String reason) {
+    public ApiResponse askAddFriend(@RequestParam String targetUid, @RequestParam String reason) throws IOException {
         return friendService.askAddFriend(targetUid, reason);
     }
 
     @AuthFilter
     @PutMapping("/ask_friend/{friendAskId}")
-    public ApiResponse reviewAskFriend(@PathVariable String friendAskId, @RequestParam Boolean isAgree) {
+    public ApiResponse reviewAskFriend(@PathVariable String friendAskId, @RequestParam Boolean isAgree) throws IOException {
         return friendService.reviewAskFriend(friendAskId, isAgree);
     }
 
     @AuthFilter
     @GetMapping("/ask_friends")
-    public ApiResponse<List<FriendAskEntity>> getReviewAskList() {
+    public ApiResponse<List<AskFriendVo>> getReviewAskList() {
         return friendService.getReviewAskList();
     }
 

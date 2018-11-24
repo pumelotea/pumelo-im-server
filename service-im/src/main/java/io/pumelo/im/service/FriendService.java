@@ -1,5 +1,7 @@
 package io.pumelo.im.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.pumelo.common.errorcode.IMCode;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.FriendAskEntity;
@@ -8,12 +10,17 @@ import io.pumelo.data.im.entity.UserEntity;
 import io.pumelo.data.im.repo.FriendAskEntityRepo;
 import io.pumelo.data.im.repo.FriendEntityRepo;
 import io.pumelo.data.im.repo.UserEntityRepo;
+import io.pumelo.data.im.vo.askFriend.AskFriendVo;
 import io.pumelo.data.im.vo.friend.FriendVo;
+import io.pumelo.data.im.vo.user.UserSearchVo;
+import io.pumelo.im.IMContext;
+import io.pumelo.im.model.Message;
 import io.pumelo.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +40,7 @@ public class FriendService {
      * @return
      */
     @Transactional
-    public ApiResponse askAddFriend(String targetUid,String reason){
+    public ApiResponse askAddFriend(String targetUid,String reason) throws IOException {
         //检查用户是否纯在
         UserEntity userEntity = userEntityRepo.findByUid(targetUid);
         if (userEntity == null){
@@ -46,6 +53,10 @@ public class FriendService {
         }
         FriendAskEntity friendAskEntity = FriendAskEntity.ask(authService.getId(),targetUid,reason);
         friendAskEntityRepo.save(friendAskEntity);
+        //推送通知
+        AskFriendVo askFriendVo = BeanUtils.copyAttrs(new AskFriendVo(),userEntity);
+        askFriendVo = BeanUtils.copyAttrs(askFriendVo,friendAskEntity);
+        IMContext.sendToUser(Message.makeSysMsg(targetUid, JSON.toJSONString(askFriendVo),"ASK_FRIEND","0"));
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
@@ -54,22 +65,21 @@ public class FriendService {
      * @return
      */
     @Transactional
-    public ApiResponse reviewAskFriend(String friendAskId,Boolean isAgree){
+    public ApiResponse reviewAskFriend(String friendAskId,Boolean isAgree) throws IOException {
         FriendAskEntity friendAskEntity = friendAskEntityRepo.findByFriendAskId(friendAskId);
         if (friendAskEntity == null){
             return ApiResponse.prompt(IMCode.FAIL);
         }
-        //检查是否是好友
-        FriendEntity friendEntityMySide = friendEntityRepo.findByUidAndFriendUid(authService.getId(), friendAskEntity.getTargetUid());
-        if (friendEntityMySide != null){
-            return ApiResponse.prompt(IMCode.FRIEND_EXISTS);
-        }
-
-
         friendAskEntity.setIsAgree(isAgree);
         friendAskEntity.setIsProcess(true);
         friendAskEntity = friendAskEntityRepo.save(friendAskEntity);
+
         if (friendAskEntity.getIsAgree()){
+            //检查是否是好友
+            FriendEntity friendEntityMySide = friendEntityRepo.findByUidAndFriendUid(authService.getId(), friendAskEntity.getUid());
+            if (friendEntityMySide != null){
+                return ApiResponse.prompt(IMCode.FRIEND_EXISTS);
+            }
             //双向建立关系
             FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getTargetUid(),authService.getId());
             FriendEntity friendEntityTo = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
@@ -79,6 +89,11 @@ public class FriendService {
                 FriendEntity friendEntityFrom = FriendEntity.makeFriend(friendAskEntity.getTargetUid(),friendAskEntity.getUid());
                 friendEntityRepo.save(friendEntityFrom);
             }
+            //通知推送
+            UserEntity friend = userEntityRepo.findByUid(friendAskEntity.getUid());
+            UserEntity me = userEntityRepo.findByUid(friendAskEntity.getTargetUid());
+            IMContext.sendToUser(Message.makeSysMsg(friend.getUid(),"您和 "+me.getName()+" 已成为好友","TEXT","0"));
+            IMContext.sendToUser(Message.makeSysMsg(me.getUid(),"您和 "+friend.getName()+" 已成为好友","TEXT","0"));
         }
         return ApiResponse.prompt(IMCode.SC_OK);
     }
@@ -87,8 +102,16 @@ public class FriendService {
      * 获取申请列表
      * @return
      */
-    public ApiResponse<List<FriendAskEntity>> getReviewAskList(){
-        return ApiResponse.ok(friendAskEntityRepo.findListByTargetUid(authService.getId()));
+    public ApiResponse<List<AskFriendVo>> getReviewAskList(){
+        List<FriendAskEntity> listByTargetUid = friendAskEntityRepo.findListByTargetUid(authService.getId());
+        List<AskFriendVo> askFriendVos = new ArrayList<>();
+        listByTargetUid.forEach(friendAskEntity -> {
+            UserEntity userEntity = userEntityRepo.findByUid(friendAskEntity.getUid());
+            AskFriendVo askFriendVo = BeanUtils.copyAttrs(new AskFriendVo(),userEntity);
+            askFriendVo = BeanUtils.copyAttrs(askFriendVo,friendAskEntity);
+            askFriendVos.add(askFriendVo);
+        });
+        return ApiResponse.ok(askFriendVos);
     }
 
     /**

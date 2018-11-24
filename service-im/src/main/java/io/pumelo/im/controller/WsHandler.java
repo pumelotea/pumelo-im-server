@@ -47,16 +47,15 @@ public class WsHandler extends TextWebSocketHandler {
         String token ="bearer " + session.getUri().getRawQuery();
         if (StringUtils.isBlank(token)) {
             //返回token无效
-            IMContext.send(session,Message.makeSysMsg("", "auth fail", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg("", "身份认证失败", "TEXT", "1001"));
             return;
         }
         String uid = IdealTokenUtils.getSubject(authService.getJwtSecret(), token);
         if (StringUtils.isBlank(uid)) {
             //返回token无效
-            IMContext.send(session,Message.makeSysMsg(uid, "auth fail", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "1001"));
             return;
         }
-
         //创建会话用户
         SessionUser sessionUser = new SessionUser(uid, session);
 
@@ -65,7 +64,7 @@ public class WsHandler extends TextWebSocketHandler {
         IMContext.sessionUsers.put(uid, sessionUser);
         LOG.info(this,"ON LINE User:"+sessionUser.getUid()+" session:"+session.getId());
         //返回连接成功
-        IMContext.send(session,Message.makeSysMsg(uid, "connected", "TEXT", "0"));
+        IMContext.send(session,Message.makeSysMsg(uid, "连接成功", "TEXT", "0"));
     }
 
     @Override

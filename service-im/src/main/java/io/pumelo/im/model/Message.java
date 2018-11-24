@@ -11,7 +11,7 @@ public class Message {
     private String messageId;
     private String code="0";
     private String msgType;//SYS ,USER ,GROUP,HEART
-    private String contentType;//内容类型, //PICTURE,TEXT,FILE
+    private String contentType;//内容类型, //PICTURE,TEXT,FILE,ASKUSER,ASKGROUP
     private String content;
     private String from;
     private String to;//由类型决定是好友消息还是群组消息
