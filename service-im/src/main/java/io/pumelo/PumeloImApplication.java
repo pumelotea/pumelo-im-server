@@ -16,6 +16,8 @@ public class PumeloImApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(PumeloImApplication.class, args);
+        SpringApplication webService = new SpringApplication(PumeloImApplication.class);
+        webService.addListeners(new ApplicationEventListener());
+        webService.run(args);
     }
 }

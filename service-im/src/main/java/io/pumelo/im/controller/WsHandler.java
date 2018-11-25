@@ -1,6 +1,7 @@
 package io.pumelo.im.controller;
 
 import com.alibaba.fastjson.JSON;
+import io.pumelo.data.im.vo.AccessTokenVo;
 import io.pumelo.im.IMContext;
 import io.pumelo.im.model.Message;
 import io.pumelo.im.model.SessionUser;
@@ -56,6 +57,13 @@ public class WsHandler extends TextWebSocketHandler {
             IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "1001"));
             return;
         }
+        AccessTokenVo accessTokenVo = redis.get("user/" + uid, AccessTokenVo.class);
+        if (accessTokenVo == null){
+            //返回token无效
+            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "1001"));
+            return;
+        }
+
         //创建会话用户
         SessionUser sessionUser = new SessionUser(uid, session);
 

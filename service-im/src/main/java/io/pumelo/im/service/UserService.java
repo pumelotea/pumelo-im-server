@@ -12,10 +12,12 @@ import io.pumelo.utils.BeanUtils;
 import io.pumelo.utils.EncryptionUtils;
 import io.pumelo.utils.jwt.JwtConstant;
 import io.pumelo.utils.jwt.JwtUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,8 @@ public class UserService {
     @Autowired
     private ObjectRedis objectRedis;
 
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
     /**
      * 登录
@@ -70,15 +74,29 @@ public class UserService {
      *
      * @return
      */
-    @Transactional
     public ApiResponse<UserVo> register(String name, String password) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setSalt(UUID.randomUUID().toString());
-        userEntity.setName(name);
-        userEntity.setPassword(EncryptionUtils.sha1(password+userEntity.getSalt()));
-        userEntity.setUid(UUID.randomUUID().toString());//FIXME 改成数字ID
-        userEntity = userEntityRepo.save(userEntity);
-        return ApiResponse.ok(BeanUtils.copyAttrs(new UserVo(),userEntity));
+
+        String id = getNewId();
+        if (StringUtils.isBlank(id)) {
+            return ApiResponse.prompt(IMCode.TOO_BUSY);
+        }
+        try{
+            UserEntity userEntity = new UserEntity();
+            userEntity.setSalt(UUID.randomUUID().toString());
+            userEntity.setName(name);
+            userEntity.setPassword(EncryptionUtils.sha1(password+userEntity.getSalt()));
+            userEntity.setUid(id);
+            userEntity = userEntityRepo.save(userEntity);
+            return ApiResponse.ok(BeanUtils.copyAttrs(new UserVo(),userEntity));
+        }catch (Exception e){
+            //返回资源
+            redisTemplate.opsForSet().add("UserIdPool", id);
+            return ApiResponse.prompt(IMCode.FAIL);
+        }
+    }
+
+    private String getNewId(){
+        return redisTemplate.opsForSet().pop("UserIdPool");
     }
 
     /**

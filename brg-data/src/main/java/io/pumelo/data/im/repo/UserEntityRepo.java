@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface UserEntityRepo extends BaseDao<UserEntity, String> {
 
     @Query(value = "select user from io.pumelo.data.im.entity.UserEntity user where user.uid = :uid and user.isTrash=false")
@@ -14,4 +16,7 @@ public interface UserEntityRepo extends BaseDao<UserEntity, String> {
 
     @Query("select user from UserEntity user where user.uid like :keyword or user.name like :keyword and user.isTrash=false")
     Page<UserEntity> findListByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("select user.uid from UserEntity user")
+    List<String> findUidList();
 }
