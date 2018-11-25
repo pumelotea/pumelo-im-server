@@ -54,7 +54,8 @@ public class FriendService {
         FriendAskEntity friendAskEntity = FriendAskEntity.ask(authService.getId(),targetUid,reason);
         friendAskEntityRepo.save(friendAskEntity);
         //推送通知
-        AskFriendVo askFriendVo = BeanUtils.copyAttrs(new AskFriendVo(),userEntity);
+        UserEntity me = userEntityRepo.findByUid(authService.getId());
+        AskFriendVo askFriendVo = BeanUtils.copyAttrs(new AskFriendVo(),me);
         askFriendVo = BeanUtils.copyAttrs(askFriendVo,friendAskEntity);
         IMContext.sendToUser(Message.makeSysMsg(targetUid, JSON.toJSONString(askFriendVo),"ASK_FRIEND","0"));
         return ApiResponse.prompt(IMCode.SC_OK);
@@ -77,17 +78,19 @@ public class FriendService {
         if (friendAskEntity.getIsAgree()){
             //检查是否是好友
             FriendEntity friendEntityMySide = friendEntityRepo.findByUidAndFriendUid(authService.getId(), friendAskEntity.getUid());
-            if (friendEntityMySide != null){
+            FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getTargetUid(),authService.getId());
+            if (friendEntityMySide != null && friendEntityFriendSide !=null){
                 return ApiResponse.prompt(IMCode.FRIEND_EXISTS);
             }
             //双向建立关系
-            FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getTargetUid(),authService.getId());
-            FriendEntity friendEntityTo = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
-            friendEntityRepo.save(friendEntityTo);
+            if (friendEntityMySide == null){
+                friendEntityMySide = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
+                friendEntityRepo.save(friendEntityMySide);
+            }
             //判断是否是对方的单项好友
             if (friendEntityFriendSide == null) {
-                FriendEntity friendEntityFrom = FriendEntity.makeFriend(friendAskEntity.getTargetUid(),friendAskEntity.getUid());
-                friendEntityRepo.save(friendEntityFrom);
+                friendEntityFriendSide = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
+                friendEntityRepo.save(friendEntityFriendSide);
             }
             //通知推送
             UserEntity friend = userEntityRepo.findByUid(friendAskEntity.getUid());
