@@ -58,6 +58,7 @@ public class UserService {
             long expiresAt = System.currentTimeMillis()+JwtConstant.JWT_TTL;
             AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken,"bearer",expiresAt/1000);
             accessTokenVo.setUid(uid);
+            accessTokenVo.setUserVo(BeanUtils.copyAttrs(new UserVo(),userEntity));
             objectRedis.add("user/"+userEntity.getUid(),JwtConstant.JWT_TTL/1000/60,accessTokenVo);
             return ApiResponse.ok(accessTokenVo);
         } catch (Exception e) {

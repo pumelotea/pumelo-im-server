@@ -48,19 +48,19 @@ public class WsHandler extends TextWebSocketHandler {
         String token ="bearer " + session.getUri().getRawQuery();
         if (StringUtils.isBlank(token)) {
             //返回token无效
-            IMContext.send(session,Message.makeSysMsg("", "身份认证失败", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg("", "身份认证失败", "TEXT", "60006"));
             return;
         }
         String uid = IdealTokenUtils.getSubject(authService.getJwtSecret(), token);
         if (StringUtils.isBlank(uid)) {
             //返回token无效
-            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "60006"));
             return;
         }
         AccessTokenVo accessTokenVo = redis.get("user/" + uid, AccessTokenVo.class);
         if (accessTokenVo == null){
             //返回token无效
-            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "1001"));
+            IMContext.send(session,Message.makeSysMsg(uid, "身份认证失败", "TEXT", "60006"));
             return;
         }
 
