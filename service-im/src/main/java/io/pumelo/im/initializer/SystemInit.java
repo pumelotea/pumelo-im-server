@@ -43,8 +43,8 @@ public class SystemInit implements ServiceInit {
      */
     private void initUserIdPool(){
         List<String> uidList = userEntityRepo.findUidList();
-        Set<String> uidSet = new HashSet<>();
-        uidList.forEach(uid-> uidSet.add(uid));
+        Set<Integer> uidSet = new HashSet<>();
+        uidList.forEach(uid-> uidSet.add(Integer.valueOf(uid)));
         List<String> ids = new ArrayList<>();
         //开放id 2000000 - 3000000
         for(int i=2000000;i<3000000;i++){

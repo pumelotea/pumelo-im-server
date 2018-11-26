@@ -60,6 +60,11 @@
             <artifactId>mod-service-init</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.pumelo</groupId>
+            <artifactId>mod-idgens</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

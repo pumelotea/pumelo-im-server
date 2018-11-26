@@ -76,3 +76,7 @@ swagger:
        licenseUrl:
        pathsRegex: ^.*(?<!error)$
 
+
+idGens:
+  workerId: 1
+  dataCenterId: 1

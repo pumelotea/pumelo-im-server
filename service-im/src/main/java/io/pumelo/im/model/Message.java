@@ -1,14 +1,14 @@
 package io.pumelo.im.model;
 
 import com.alibaba.fastjson.JSON;
+import io.pumelo.im.IMContext;
 import lombok.Data;
 import org.springframework.web.socket.TextMessage;
 
-import java.util.UUID;
 
 @Data
 public class Message {
-    private String messageId;
+    private Long messageId;
     private String code="0";
     private String msgType;//SYS ,USER ,GROUP,HEART
     private String contentType;//内容类型, //PICTURE,TEXT,FILE,ASKUSER,ASKGROUP
@@ -27,7 +27,7 @@ public class Message {
 
     public static Message makeSysMsg(String to,String content,String contentType,String code){
         Message message = new Message();
-        message.messageId = UUID.randomUUID().toString();
+        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "SYS";
         message.from = "SYS";
         message.sentAt = System.currentTimeMillis();
@@ -40,7 +40,7 @@ public class Message {
 
     public static Message makeUserMsg(String from, String to,String content,String contentType){
         Message message = new Message();
-        message.messageId = UUID.randomUUID().toString();
+        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "USER";
         message.sentAt = System.currentTimeMillis();
         message.from =from;
@@ -52,7 +52,7 @@ public class Message {
 
     public static Message makeGroupMsg(String from, String to,String content,String contentType){
         Message message = new Message();
-        message.messageId = UUID.randomUUID().toString();
+        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "GROUP";
         message.sentAt = System.currentTimeMillis();
         message.from =from;
@@ -84,7 +84,7 @@ public class Message {
      */
     public void makeComplete(String from){
         this.sentAt = System.currentTimeMillis();
-        this.messageId = UUID.randomUUID().toString();
+        this.messageId = IMContext.idWorker.nextId();
         this.from = from;
     }
 }

@@ -1,6 +1,8 @@
 package io.pumelo.im;
 
 
+import io.pumelo.idgens.worker.IdWorker;
+import io.pumelo.im.Processtor.PersistentProcessor;
 import io.pumelo.im.model.Message;
 import io.pumelo.im.model.SessionGroup;
 import io.pumelo.im.model.SessionUser;
@@ -14,17 +16,35 @@ import java.util.Hashtable;
  * 全局不使用数据库中的memberId
  */
 public class IMContext {
+
+    public static IdWorker idWorker;
     //在线用户表
     public static Hashtable<String, SessionUser> sessionUsers = new Hashtable<>();
     //全局群组缓存
     public static Hashtable<String, SessionGroup> sessionGroups = new Hashtable<>();
 
+    private static PersistentProcessor persistentProcessor;
+
+    /**
+     * 设置持久化处理器
+     * @param persistentProcessor
+     */
+    public static void setPersistentProcessor(PersistentProcessor persistentProcessor){
+        IMContext.persistentProcessor = persistentProcessor;
+    }
+
+    public static void setIdWorker(IdWorker idWorker){
+        IMContext.idWorker = idWorker;
+    }
+
 
     public static void send(WebSocketSession session,Message message) throws IOException {
         if (session.isOpen()){
             session.sendMessage(message.toTextMessage());
+            persistentProcessor.persistent(message,true);
         }else {
             //离线处理
+            persistentProcessor.persistent(message,false);
         }
     }
 
@@ -33,10 +53,9 @@ public class IMContext {
         SessionUser sessionUser = sessionUsers.get(message.getTo());
         if (sessionUser != null){
             send(sessionUser.getSession(),message);
-
-
         }else {
            //离线处理
+            persistentProcessor.persistent(message,false);
         }
     }
 
