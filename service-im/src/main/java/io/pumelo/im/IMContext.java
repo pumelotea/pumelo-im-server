@@ -37,6 +37,17 @@ public class IMContext {
         IMContext.idWorker = idWorker;
     }
 
+    /**
+     * 返回确认
+     * @param session
+     * @param message
+     * @throws IOException
+     */
+    public static void sendAck(WebSocketSession session,Message message) throws IOException {
+        if (session.isOpen()){
+            session.sendMessage(message.toTextMessage());
+        }
+    }
 
     public static void send(WebSocketSession session,Message message) throws IOException {
         if (session.isOpen()){

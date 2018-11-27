@@ -90,6 +90,7 @@ public class WsHandler extends TextWebSocketHandler {
             IMContext.sendHeart(session);
         } else {
             IMContext.sendToUser(msg);
+            IMContext.sendAck(session,msg);
         }
 
     }
