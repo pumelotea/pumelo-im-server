@@ -4,11 +4,13 @@ import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.MessageEntity;
 import io.pumelo.data.im.repo.MessageEntityRepo;
 import io.pumelo.data.im.vo.message.MessageListVo;
+import io.pumelo.data.im.vo.message.MessagePreviewVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,13 +27,19 @@ public class MessageService {
      * @return
      */
     @Transactional
-    public ApiResponse<List<MessageEntity>> getOfflineMessagePreview(){
+    public ApiResponse<List<MessagePreviewVo>> getOfflineMessagePreview(){
         List<MessageEntity> listGroupByFrom = messageEntityRepo.findListGroupByFrom(authService.getId());
+        List<MessagePreviewVo> list = new ArrayList<>();
         listGroupByFrom.forEach(messageEntity -> {
+           int count= messageEntityRepo.countByFrom(messageEntity.getFrom(),authService.getId());
+           MessagePreviewVo previewVo = new MessagePreviewVo();
+            previewVo.setCount(count);
+            previewVo.setMessage(messageEntity);
+            list.add(previewVo);
             messageEntity.setIsSent(true);
             messageEntityRepo.save(messageEntity);
         });
-        return ApiResponse.ok(listGroupByFrom);
+        return ApiResponse.ok(list);
     }
 
 

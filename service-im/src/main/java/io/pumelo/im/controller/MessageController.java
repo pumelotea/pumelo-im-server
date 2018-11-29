@@ -2,8 +2,8 @@ package io.pumelo.im.controller;
 
 import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.web.ApiResponse;
-import io.pumelo.data.im.entity.MessageEntity;
 import io.pumelo.data.im.vo.message.MessageListVo;
+import io.pumelo.data.im.vo.message.MessagePreviewVo;
 import io.pumelo.im.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class MessageController {
 
     @AuthFilter
     @GetMapping("/message_preview")
-    public ApiResponse<List<MessageEntity>> getOfflineMessagePreview(){
+    public ApiResponse<List<MessagePreviewVo>> getOfflineMessagePreview(){
         return messageService.getOfflineMessagePreview();
     }
 
