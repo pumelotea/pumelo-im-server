@@ -38,7 +38,7 @@ public class IMContext {
     }
 
     /**
-     * 返回确认
+     * 返回确认 不支持持久化
      * @param session
      * @param message
      * @throws IOException
