@@ -1,4 +1,4 @@
-package io.pumelo.im.service;
+package io.pumelo.im.TEST;
 
 public class test {
 
