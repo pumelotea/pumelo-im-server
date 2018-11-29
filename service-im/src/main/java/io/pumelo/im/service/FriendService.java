@@ -78,18 +78,18 @@ public class FriendService {
         if (friendAskEntity.getIsAgree()){
             //检查是否是好友
             FriendEntity friendEntityMySide = friendEntityRepo.findByUidAndFriendUid(authService.getId(), friendAskEntity.getUid());
-            FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getTargetUid(),authService.getId());
+            FriendEntity friendEntityFriendSide = friendEntityRepo.findByUidAndFriendUid(friendAskEntity.getUid(),authService.getId());
             if (friendEntityMySide != null && friendEntityFriendSide !=null){
                 return ApiResponse.prompt(IMCode.FRIEND_EXISTS);
             }
             //双向建立关系
             if (friendEntityMySide == null){
-                friendEntityMySide = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
+                friendEntityMySide = FriendEntity.makeFriend(authService.getId(),friendAskEntity.getUid());
                 friendEntityRepo.save(friendEntityMySide);
             }
             //判断是否是对方的单项好友
             if (friendEntityFriendSide == null) {
-                friendEntityFriendSide = FriendEntity.makeFriend(friendAskEntity.getUid(),friendAskEntity.getTargetUid());
+                friendEntityFriendSide = FriendEntity.makeFriend(friendAskEntity.getUid(),authService.getId());
                 friendEntityRepo.save(friendEntityFriendSide);
             }
             //通知推送
