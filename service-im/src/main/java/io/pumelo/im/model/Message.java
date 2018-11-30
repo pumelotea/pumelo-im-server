@@ -10,12 +10,14 @@ import org.springframework.web.socket.TextMessage;
 public class Message {
     private Long messageId;
     private String code="0";
-    private String msgType;//SYS ,USER ,GROUP,HEART
+    private String msgType;//SYS ,USER ,GROUP,HEART,SIGNAL
     private String contentType;//内容类型, //PICTURE,TEXT,FILE,ASKUSER,ASKGROUP
     private String content;
     private String from;
     private String to;//由类型决定是好友消息还是群组消息
     private long sentAt;//发送时间
+
+
 
     public static Message makeHeartMsg(){
         Message message = new Message();
@@ -61,6 +63,26 @@ public class Message {
         message.contentType =contentType;
         return message;
     }
+
+    /**
+     * 信令消息
+     * @param from
+     * @param to
+     * @param content
+     * @return
+     */
+    public static Message makeSignalMsg(String from, String to,String content){
+        Message message = new Message();
+        message.messageId = IMContext.idWorker.nextId();
+        message.msgType = "SIGNAL";
+        message.sentAt = System.currentTimeMillis();
+        message.from =from;
+        message.to = to;
+        message.content = content;
+        message.contentType ="TEXT";
+        return message;
+    }
+
 
     public String toJSON(){
         return JSON.toJSONString(this);

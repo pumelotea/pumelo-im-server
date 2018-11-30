@@ -5,7 +5,7 @@ public enum IMCode implements BaseErrorCode {
     SUCCESS(0,"操作成功！"),
     FAIL(-1,"操作失败！"),
     TOO_BUSY(-2,"服务器繁忙"),
-    SC_OK(200,"OPERATE RETRIEVE SUCCESS"),
+    SC_OK(200,"OPERATE SUCCESS"),
     CREATE_UPDATE_SUCCESS(201,"OPERATE UPDATE SUCCESS"),
     DELETE_SUCCESS(204,"OPERATE DELETE SUCCESS"),
     CLIENT_BAD_REQUEST(400, "Bad Request!"),

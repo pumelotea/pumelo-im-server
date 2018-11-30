@@ -22,8 +22,8 @@ public class MessageEntity extends AbstractBaseEntity {
     @Column
     private String msgType;//SYS ,USER ,GROUP,HEART
     @Column
-    private String contentType;//内容类型, //PICTURE,TEXT,FILE,ASKUSER,ASKGROUP
-    @Column
+    private String contentType;//内容类型, //PICTURE,TEXT,FILE,ASKUSER,ASKGROUP,
+    @Column(columnDefinition = "TEXT")
     private String content;
     @Column(name = "send_from")
     private String from;
