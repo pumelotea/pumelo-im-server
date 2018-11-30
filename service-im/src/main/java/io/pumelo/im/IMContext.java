@@ -70,6 +70,16 @@ public class IMContext {
         }
     }
 
+    public static void sendToUserUnpersistent(Message message) throws IOException {
+        SessionUser sessionUser = sessionUsers.get(message.getTo());
+        if (sessionUser != null){
+            WebSocketSession session = sessionUser.getSession();
+            if (session.isOpen()){
+                session.sendMessage(message.toTextMessage());
+            }
+        }
+    }
+
     public static void sendToGroup(Message message){
 
     }
