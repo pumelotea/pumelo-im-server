@@ -51,7 +51,11 @@ public class IMContext {
 
     public static void send(WebSocketSession session,Message message) throws IOException {
         if (session.isOpen()){
-            session.sendMessage(message.toTextMessage());
+            synchronized (session) {
+                if (session.isOpen()){
+                    session.sendMessage(message.toTextMessage());
+                }
+            }
             persistentProcessor.persistent(message,true);
         }else {
             //离线处理
@@ -70,12 +74,14 @@ public class IMContext {
         }
     }
 
-    public static void sendToUserUnpersistent(Message message) throws IOException {
+    public static void sendToUserUnPersistent(Message message) throws IOException {
         SessionUser sessionUser = sessionUsers.get(message.getTo());
         if (sessionUser != null){
             WebSocketSession session = sessionUser.getSession();
-            if (session.isOpen()){
-                session.sendMessage(message.toTextMessage());
+            synchronized (session) {
+                if (session.isOpen()){
+                    session.sendMessage(message.toTextMessage());
+                }
             }
         }
     }

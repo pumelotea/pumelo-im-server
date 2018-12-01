@@ -24,7 +24,7 @@ public class VideoChatService {
         if (byUidAndFriendUid == null){
             ApiResponse.prompt(IMCode.FRIEND_NOT_EXISTS);
         }
-        IMContext.sendToUserUnpersistent(Message.makeSignalMsg(authService.getId(),uid,json));
+        IMContext.sendToUserUnPersistent(Message.makeSignalMsg(authService.getId(),uid,json));
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 }
