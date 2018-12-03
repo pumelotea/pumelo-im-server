@@ -95,8 +95,8 @@ public class FriendService {
             //通知推送
             UserEntity friend = userEntityRepo.findByUid(friendAskEntity.getUid());
             UserEntity me = userEntityRepo.findByUid(friendAskEntity.getTargetUid());
-            IMContext.sendToUser(Message.makeSysMsg(friend.getUid(),"您和 "+me.getName()+" 已成为好友","TEXT","0"));
-            IMContext.sendToUser(Message.makeSysMsg(me.getUid(),"您和 "+friend.getName()+" 已成为好友","TEXT","0"));
+            IMContext.sendToUser(Message.makeSysMsg(friend.getUid(),"您和 "+me.getName()+" 已成为好友","TEXT","1"));
+            IMContext.sendToUser(Message.makeSysMsg(me.getUid(),"您和 "+friend.getName()+" 已成为好友","TEXT","1"));
         }
         return ApiResponse.prompt(IMCode.SC_OK);
     }
