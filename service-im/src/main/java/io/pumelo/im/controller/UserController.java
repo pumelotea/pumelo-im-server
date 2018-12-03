@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 
 @RestController
 @Validated
@@ -36,7 +37,7 @@ public class UserController {
 
     @AuthFilter
     @PostMapping("/logout")
-    public ApiResponse logout() {
+    public ApiResponse logout() throws IOException {
         return userService.logout();
     }
 

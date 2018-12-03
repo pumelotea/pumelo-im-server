@@ -7,6 +7,7 @@ import io.pumelo.data.im.repo.UserEntityRepo;
 import io.pumelo.data.im.vo.AccessTokenVo;
 import io.pumelo.data.im.vo.user.UserSearchVo;
 import io.pumelo.data.im.vo.user.UserVo;
+import io.pumelo.im.IMContext;
 import io.pumelo.redis.ObjectRedis;
 import io.pumelo.utils.BeanUtils;
 import io.pumelo.utils.EncryptionUtils;
@@ -21,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -103,8 +105,9 @@ public class UserService {
     /**
      * 退出
      */
-    public ApiResponse logout() {
+    public ApiResponse logout() throws IOException {
         objectRedis.delete("/user"+authService.getId());
+        IMContext.removeUser(authService.getId());
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 

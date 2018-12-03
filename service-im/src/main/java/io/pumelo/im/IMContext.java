@@ -107,4 +107,17 @@ public class IMContext {
     public static SessionUser getUser(WebSocketSession session){
         return sessionUsers.get(session.getId());
     }
+
+    /**
+     * 移除用户
+     * @param uid
+     */
+    public static void removeUser(String uid) throws IOException {
+        SessionUser remove = sessionUsers.remove(uid);
+        if (remove!= null){
+            sessionUsers.remove(remove.getSession().getId());
+            remove.getSession().close();
+        }
+
+    }
 }
