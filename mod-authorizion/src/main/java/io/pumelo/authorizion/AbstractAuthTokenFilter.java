@@ -44,6 +44,11 @@ public abstract class AbstractAuthTokenFilter implements HandlerInterceptor,Secu
                 responseMsg(response, Syscode.JWT_TOKEN_INVALID);
                 return false;
             }
+            //检查token是否过期
+            if (isTimeout()){
+                responseMsg(response, Syscode.JWT_TOKEN_EXPIRAT);
+                return false;
+            }
         }
         return true;
     }
@@ -94,7 +99,7 @@ public abstract class AbstractAuthTokenFilter implements HandlerInterceptor,Secu
 
     @Override
     public boolean isTimeout() {
-        return false;
+        return IdealTokenUtils.isExpired(getJwtSecret(), getAuth());
     }
 
     @Override

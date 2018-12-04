@@ -96,9 +96,9 @@ public class WsHandler extends TextWebSocketHandler {
 //            IMContext.sendHeart(session);
         } else {
             try{
+                sender.sendToUser(msg.getFrom(),msg);
                 if (router.isOnline(msg.getTo())){
                     sender.sendToUser(msg.getTo(),msg);
-                    sender.sendToUser(msg.getFrom(),msg);
                     persistentProcessor.persistent(msg,true);
                 }else {
                     //持久化
