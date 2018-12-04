@@ -1,4 +1,6 @@
-# PumeloIM
+# PumeloIMServer 
+
+
 
 <pre>
      _____   _   _       ___  ___   _____   _       _____
@@ -9,10 +11,8 @@
     |_|     \\_____//_/        |_| |_____| |_____| \\____/
 </pre>
 
-基于SpringBoot2.0 以及 WebSocket 实现的Web端IM实时在线聊天
+- version: alpha
+- 基于SpringBoot2.0 以及 WebSocket 实现的Web端IM实时在线聊天
 
-## 技术栈
-- MySQL 5.6/5.7
-- JPA
-- Redis 3.x or later
+
 
