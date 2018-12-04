@@ -1,4 +1,4 @@
-package io.pumelo.im.Processtor;
+package io.pumelo.im.processtor;
 
 import io.pumelo.im.model.Message;
 

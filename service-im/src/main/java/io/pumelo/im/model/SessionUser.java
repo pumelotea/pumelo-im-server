@@ -1,21 +1,35 @@
 package io.pumelo.im.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
 
-@Data
-public class SessionUser {
+public class SessionUser implements Session<WebSocketSession> {
     private String uid;
     private long loginAt;
 
     @JsonIgnore
     private transient WebSocketSession session;
 
-    public SessionUser(String uid, WebSocketSession session) {
-        this.uid = uid;
+    @Override
+    public void init(String uid, WebSocketSession session) {
         this.loginAt = System.currentTimeMillis();
+        this.uid = uid;
         this.session = session;
+    }
+
+    @Override
+    public WebSocketSession getConnection() {
+        return this.session;
+    }
+
+    @Override
+    public String getUid() {
+        return uid;
+    }
+
+    @Override
+    public long getLoginAt() {
+        return loginAt;
     }
 }

@@ -1,7 +1,6 @@
 package io.pumelo.im.model;
 
 import com.alibaba.fastjson.JSON;
-import io.pumelo.im.IMContext;
 import lombok.Data;
 import org.springframework.web.socket.TextMessage;
 
@@ -29,7 +28,6 @@ public class Message {
 
     public static Message makeSysMsg(String to,String content,String contentType,String code){
         Message message = new Message();
-        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "SYS";
         message.from = "SYS";
         message.sentAt = System.currentTimeMillis();
@@ -42,7 +40,6 @@ public class Message {
 
     public static Message makeUserMsg(String from, String to,String content,String contentType){
         Message message = new Message();
-        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "USER";
         message.sentAt = System.currentTimeMillis();
         message.from =from;
@@ -54,7 +51,6 @@ public class Message {
 
     public static Message makeGroupMsg(String from, String to,String content,String contentType){
         Message message = new Message();
-        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "GROUP";
         message.sentAt = System.currentTimeMillis();
         message.from =from;
@@ -73,7 +69,6 @@ public class Message {
      */
     public static Message makeSignalMsg(String from, String to,String content){
         Message message = new Message();
-        message.messageId = IMContext.idWorker.nextId();
         message.msgType = "SIGNAL";
         message.sentAt = System.currentTimeMillis();
         message.from =from;
@@ -104,9 +99,9 @@ public class Message {
      * 把消息体拼装完整
      * @param from
      */
-    public void makeComplete(String from){
+    public void makeComplete(String from,Long messageId){
         this.sentAt = System.currentTimeMillis();
-        this.messageId = IMContext.idWorker.nextId();
+        this.messageId = messageId;
         this.from = from;
     }
 }

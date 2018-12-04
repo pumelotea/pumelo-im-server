@@ -1,7 +1,6 @@
 package io.pumelo.im.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import io.pumelo.common.errorcode.IMCode;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.FriendAskEntity;
@@ -12,15 +11,13 @@ import io.pumelo.data.im.repo.FriendEntityRepo;
 import io.pumelo.data.im.repo.UserEntityRepo;
 import io.pumelo.data.im.vo.askFriend.AskFriendVo;
 import io.pumelo.data.im.vo.friend.FriendVo;
-import io.pumelo.data.im.vo.user.UserSearchVo;
-import io.pumelo.im.IMContext;
 import io.pumelo.im.model.Message;
+import io.pumelo.im.sender.Sender;
 import io.pumelo.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +31,15 @@ public class FriendService {
     private FriendAskEntityRepo friendAskEntityRepo;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private Sender sender;
 
     /**
      * 申请加好友
      * @return
      */
     @Transactional
-    public ApiResponse askAddFriend(String targetUid,String reason) throws IOException {
+    public ApiResponse askAddFriend(String targetUid,String reason) throws Exception {
         //检查用户是否纯在
         UserEntity userEntity = userEntityRepo.findByUid(targetUid);
         if (userEntity == null){
@@ -57,7 +56,7 @@ public class FriendService {
         UserEntity me = userEntityRepo.findByUid(authService.getId());
         AskFriendVo askFriendVo = BeanUtils.copyAttrs(new AskFriendVo(),me);
         askFriendVo = BeanUtils.copyAttrs(askFriendVo,friendAskEntity);
-        IMContext.sendToUser(Message.makeSysMsg(targetUid, JSON.toJSONString(askFriendVo),"ASK_FRIEND","0"));
+        sender.sendToUser(targetUid,Message.makeSysMsg(targetUid, JSON.toJSONString(askFriendVo),"ASK_FRIEND","0"));
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
@@ -66,7 +65,7 @@ public class FriendService {
      * @return
      */
     @Transactional
-    public ApiResponse reviewAskFriend(String friendAskId,Boolean isAgree) throws IOException {
+    public ApiResponse reviewAskFriend(String friendAskId,Boolean isAgree) throws Exception {
         FriendAskEntity friendAskEntity = friendAskEntityRepo.findByFriendAskId(friendAskId);
         if (friendAskEntity == null){
             return ApiResponse.prompt(IMCode.FAIL);
@@ -95,8 +94,8 @@ public class FriendService {
             //通知推送
             UserEntity friend = userEntityRepo.findByUid(friendAskEntity.getUid());
             UserEntity me = userEntityRepo.findByUid(friendAskEntity.getTargetUid());
-            IMContext.sendToUser(Message.makeSysMsg(friend.getUid(),"您和 "+me.getName()+" 已成为好友","TEXT","1"));
-            IMContext.sendToUser(Message.makeSysMsg(me.getUid(),"您和 "+friend.getName()+" 已成为好友","TEXT","1"));
+            sender.sendToUser(friend.getUid(),Message.makeSysMsg(friend.getUid(),"您和 "+me.getName()+" 已成为好友","TEXT","1"));
+            sender.sendToUser(me.getUid(),Message.makeSysMsg(me.getUid(),"您和 "+friend.getName()+" 已成为好友","TEXT","1"));
         }
         return ApiResponse.prompt(IMCode.SC_OK);
     }

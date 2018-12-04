@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
-import java.io.IOException;
 
 @RestController
 public class VideoChatController {
@@ -17,7 +16,7 @@ public class VideoChatController {
     private VideoChatService videoChatService;
 
     @PostMapping("/signal/{uid}")
-    public ApiResponse transferToFriend(@PathVariable @NotBlank String uid, @RequestParam @NotBlank  String json) throws IOException {
+    public ApiResponse transferToFriend(@PathVariable @NotBlank String uid, @RequestParam @NotBlank  String json) throws Exception {
         return videoChatService.transferToFriend(uid,json);
     }
 

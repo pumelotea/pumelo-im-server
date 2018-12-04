@@ -19,13 +19,13 @@ public class FriendController {
 
     @AuthFilter
     @PostMapping("/ask_friend")
-    public ApiResponse askAddFriend(@RequestParam String targetUid, @RequestParam String reason) throws IOException {
+    public ApiResponse askAddFriend(@RequestParam String targetUid, @RequestParam String reason) throws Exception {
         return friendService.askAddFriend(targetUid, reason);
     }
 
     @AuthFilter
     @PutMapping("/ask_friend/{friendAskId}")
-    public ApiResponse reviewAskFriend(@PathVariable String friendAskId, @RequestParam Boolean isAgree) throws IOException {
+    public ApiResponse reviewAskFriend(@PathVariable String friendAskId, @RequestParam Boolean isAgree) throws Exception {
         return friendService.reviewAskFriend(friendAskId, isAgree);
     }
 

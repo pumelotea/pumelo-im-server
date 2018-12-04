@@ -7,7 +7,7 @@ import io.pumelo.data.im.repo.UserEntityRepo;
 import io.pumelo.data.im.vo.AccessTokenVo;
 import io.pumelo.data.im.vo.user.UserSearchVo;
 import io.pumelo.data.im.vo.user.UserVo;
-import io.pumelo.im.IMContext;
+import io.pumelo.im.router.Router;
 import io.pumelo.redis.ObjectRedis;
 import io.pumelo.utils.BeanUtils;
 import io.pumelo.utils.EncryptionUtils;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,9 @@ public class UserService {
     private ObjectRedis objectRedis;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private Router router;
 
     /**
      * 登录
@@ -47,26 +48,26 @@ public class UserService {
      * @return
      */
     public ApiResponse<AccessTokenVo> login(String uid, String password) {
-        UserEntity userEntity =userEntityRepo.findByUid(uid);
-        if(null == userEntity) {
+        UserEntity userEntity = userEntityRepo.findByUid(uid);
+        if (null == userEntity) {
             return ApiResponse.prompt(IMCode.ACCOUNT_NOT_EXISTS);
         }
-        if (!userEntity.isAuthentication(password)){//密码输入有误
+        if (!userEntity.isAuthentication(password)) {//密码输入有误
             return ApiResponse.prompt(IMCode.ACCOUNT_PWD_ERROR);
         }
         try {
             long nowMillis = System.currentTimeMillis();
-            String accessToken = JwtUtils.createJWT(JwtConstant.JWT_SECRET,nowMillis,JwtConstant.JWT_ID,userEntity.getUid() , JwtConstant.JWT_TTL);
-            long expiresAt = System.currentTimeMillis()+JwtConstant.JWT_TTL;
-            AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken,"bearer",expiresAt/1000);
+            String accessToken = JwtUtils.createJWT(JwtConstant.JWT_SECRET, nowMillis, JwtConstant.JWT_ID, userEntity.getUid(), JwtConstant.JWT_TTL);
+            long expiresAt = System.currentTimeMillis() + JwtConstant.JWT_TTL;
+            AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken, "bearer", expiresAt / 1000);
             accessTokenVo.setUid(uid);
-            accessTokenVo.setUserVo(BeanUtils.copyAttrs(new UserVo(),userEntity));
-            objectRedis.add("user/"+userEntity.getUid(),JwtConstant.JWT_TTL/1000/60,accessTokenVo);
+            accessTokenVo.setUserVo(BeanUtils.copyAttrs(new UserVo(), userEntity));
+            objectRedis.add("user/" + userEntity.getUid(), JwtConstant.JWT_TTL / 1000 / 60, accessTokenVo);
             return ApiResponse.ok(accessTokenVo);
         } catch (Exception e) {
             e.printStackTrace();
             //删除已经装在的资源
-            objectRedis.delete("user/"+userEntity.getUid());
+            objectRedis.delete("user/" + userEntity.getUid());
             return ApiResponse.prompt(IMCode.LOGIN_FAIL);
         }
     }
@@ -83,41 +84,41 @@ public class UserService {
         if (StringUtils.isBlank(id)) {
             return ApiResponse.prompt(IMCode.TOO_BUSY);
         }
-        try{
+        try {
             UserEntity userEntity = new UserEntity();
             userEntity.setSalt(UUID.randomUUID().toString());
             userEntity.setName(name);
-            userEntity.setPassword(EncryptionUtils.sha1(password+userEntity.getSalt()));
+            userEntity.setPassword(EncryptionUtils.sha1(password + userEntity.getSalt()));
             userEntity.setUid(id);
             userEntity = userEntityRepo.save(userEntity);
-            return ApiResponse.ok(BeanUtils.copyAttrs(new UserVo(),userEntity));
-        }catch (Exception e){
+            return ApiResponse.ok(BeanUtils.copyAttrs(new UserVo(), userEntity));
+        } catch (Exception e) {
             //返回资源
             redisTemplate.opsForSet().add("UserIdPool", id);
             return ApiResponse.prompt(IMCode.FAIL);
         }
     }
 
-    private String getNewId(){
+    private String getNewId() {
         return redisTemplate.opsForSet().pop("UserIdPool");
     }
 
     /**
      * 退出
      */
-    public ApiResponse logout() throws IOException {
-        objectRedis.delete("/user"+authService.getId());
-        IMContext.removeUser(authService.getId());
+    public ApiResponse logout() {
+        objectRedis.delete("/user" + authService.getId());
+        router.removeUser(authService.getId());
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
 
     public ApiResponse<Page<UserSearchVo>> search(String keyword, int page, int size) {
-        Page<UserEntity> listByKeyword = userEntityRepo.findListByKeyword("%"+keyword+"%", PageRequest.of(page, size));
+        Page<UserEntity> listByKeyword = userEntityRepo.findListByKeyword("%" + keyword + "%", PageRequest.of(page, size));
         List<UserSearchVo> voList = new ArrayList<>();
         listByKeyword.getContent().forEach(userEntity -> {
-            voList.add(BeanUtils.copyAttrs(new UserSearchVo(),userEntity));
+            voList.add(BeanUtils.copyAttrs(new UserSearchVo(), userEntity));
         });
-        return ApiResponse.ok(new PageImpl<>(voList,PageRequest.of(page, size),listByKeyword.getTotalElements()));
+        return ApiResponse.ok(new PageImpl<>(voList, PageRequest.of(page, size), listByKeyword.getTotalElements()));
     }
 }
