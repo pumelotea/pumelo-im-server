@@ -9,6 +9,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 
+/**
+ * 基于本地websocket实现的发送组件
+ */
 @Component
 public class WsSender implements Sender<WebSocketSession> {
     @Autowired

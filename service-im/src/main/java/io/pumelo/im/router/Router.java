@@ -2,6 +2,9 @@ package io.pumelo.im.router;
 
 import io.pumelo.im.model.Session;
 
+/**
+ * 路由接口
+ */
 public interface Router {
     Session getUser(String uid);
     void setUser(Session user);

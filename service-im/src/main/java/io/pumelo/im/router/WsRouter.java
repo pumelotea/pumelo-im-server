@@ -6,6 +6,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Hashtable;
 
+/**
+ * 基于Hashtable和websocket实现的在线用户路由
+ */
 @Component
 public class WsRouter implements Router {
     private static Hashtable<String, Session> sessionUsers = new Hashtable<>();
