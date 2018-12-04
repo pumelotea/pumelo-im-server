@@ -6,7 +6,7 @@ import java.io.IOException;
 
 /**
  * 消息发送接口
- * @param <T>
+ * @param <T> 长连接对象
  */
 public interface Sender<T> {
     void sendToUser(String uid, Message message) throws Exception;
