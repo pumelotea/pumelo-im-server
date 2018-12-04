@@ -3,7 +3,9 @@ package io.pumelo.im.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.socket.WebSocketSession;
 
-
+/**
+ * 基于websocket实现的长连接会话
+ */
 public class SessionUser implements Session<WebSocketSession> {
     private String uid;
     private long loginAt;
