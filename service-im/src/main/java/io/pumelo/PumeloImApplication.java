@@ -1,10 +1,7 @@
 package io.pumelo;
 
 import io.pumelo.idgens.annotation.EnableIdGens;
-import io.pumelo.idgens.worker.IdWorker;
-import io.pumelo.im.processtor.MySQLPersistentProcessor;
 import io.pumelo.utils.jwt.JwtConstant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
