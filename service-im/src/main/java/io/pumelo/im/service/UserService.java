@@ -1,5 +1,6 @@
 package io.pumelo.im.service;
 
+import io.pumelo.authorizion.AuthFilter;
 import io.pumelo.common.errorcode.IMCode;
 import io.pumelo.common.web.ApiResponse;
 import io.pumelo.data.im.entity.UserEntity;
@@ -106,6 +107,7 @@ public class UserService {
     /**
      * 退出
      */
+    @AuthFilter
     public ApiResponse logout() {
         objectRedis.delete("/user" + authService.getId());
         router.removeUser(authService.getId());
@@ -122,6 +124,7 @@ public class UserService {
         return ApiResponse.ok(new PageImpl<>(voList, PageRequest.of(page, size), listByKeyword.getTotalElements()));
     }
 
+    @AuthFilter
     @Transactional
     public ApiResponse updateUserInfo(String name, String sex, String birth) {
         UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
@@ -132,6 +135,7 @@ public class UserService {
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
+    @AuthFilter
     @Transactional
     public ApiResponse updatePassword(String oldPassword, String newPassword) {
         UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
@@ -143,6 +147,7 @@ public class UserService {
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
+    @AuthFilter
     @Transactional
     public ApiResponse updateHeadImg(String imgUrl) {
         UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
@@ -151,4 +156,23 @@ public class UserService {
         return ApiResponse.prompt(IMCode.SC_OK);
     }
 
+    @AuthFilter
+    public ApiResponse<AccessTokenVo> refreshToken(){
+        UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
+        try {
+            long nowMillis = System.currentTimeMillis();
+            String accessToken = JwtUtils.createJWT(JwtConstant.JWT_SECRET, nowMillis, JwtConstant.JWT_ID, userEntity.getUid(), JwtConstant.JWT_TTL);
+            long expiresAt = System.currentTimeMillis() + JwtConstant.JWT_TTL;
+            AccessTokenVo accessTokenVo = new AccessTokenVo(accessToken, "bearer", expiresAt / 1000);
+            accessTokenVo.setUid(authService.getId());
+            accessTokenVo.setUserVo(BeanUtils.copyAttrs(new UserVo(), userEntity));
+            objectRedis.add("user/" + userEntity.getUid(), JwtConstant.JWT_TTL / 1000 / 60, accessTokenVo);
+            return ApiResponse.ok(accessTokenVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //删除已经装在的资源
+            objectRedis.delete("user/" + userEntity.getUid());
+            return ApiResponse.prompt(IMCode.FAIL);
+        }
+    }
 }
