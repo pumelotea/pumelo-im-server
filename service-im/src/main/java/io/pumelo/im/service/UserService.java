@@ -8,7 +8,9 @@ import io.pumelo.data.im.repo.UserEntityRepo;
 import io.pumelo.data.im.vo.AccessTokenVo;
 import io.pumelo.data.im.vo.user.UserSearchVo;
 import io.pumelo.data.im.vo.user.UserVo;
+import io.pumelo.im.model.Message;
 import io.pumelo.im.router.Router;
+import io.pumelo.im.sender.Sender;
 import io.pumelo.redis.ObjectRedis;
 import io.pumelo.utils.BeanUtils;
 import io.pumelo.utils.EncryptionUtils;
@@ -42,6 +44,8 @@ public class UserService {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private Router router;
+    @Autowired
+    private Sender sender;
 
     /**
      * 登录
@@ -64,6 +68,12 @@ public class UserService {
             accessTokenVo.setUid(uid);
             accessTokenVo.setUserVo(BeanUtils.copyAttrs(new UserVo(), userEntity));
             objectRedis.add("user/" + userEntity.getUid(), JwtConstant.JWT_TTL / 1000 / 60, accessTokenVo);
+            //推送下线通知
+            boolean online = router.isOnline(uid);
+            if (online){
+                sender.sendToUser(uid, Message.makeSysMsg(uid,"您的账号在其他地方登陆","TEXT","0"));
+                router.removeUser(uid);
+            }
             return ApiResponse.ok(accessTokenVo);
         } catch (Exception e) {
             e.printStackTrace();
