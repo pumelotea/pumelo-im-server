@@ -20,8 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -121,4 +121,34 @@ public class UserService {
         });
         return ApiResponse.ok(new PageImpl<>(voList, PageRequest.of(page, size), listByKeyword.getTotalElements()));
     }
+
+    @Transactional
+    public ApiResponse updateUserInfo(String name, String sex, String birth) {
+        UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
+        userEntity.setBirth(birth);
+        userEntity.setName(name);
+        userEntity.setSex(sex);
+        userEntityRepo.save(userEntity);
+        return ApiResponse.prompt(IMCode.SC_OK);
+    }
+
+    @Transactional
+    public ApiResponse updatePassword(String oldPassword, String newPassword) {
+        UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
+        if (!userEntity.isAuthentication(oldPassword)) {
+            return ApiResponse.prompt(IMCode.ACCOUNT_PWD_ERROR);
+        }
+        userEntity.setPassword(EncryptionUtils.sha1(newPassword + userEntity.getSalt()));
+        userEntityRepo.save(userEntity);
+        return ApiResponse.prompt(IMCode.SC_OK);
+    }
+
+    @Transactional
+    public ApiResponse updateHeadImg(String imgUrl) {
+        UserEntity userEntity = userEntityRepo.findByUid(authService.getId());
+        userEntity.setHeadImg(imgUrl);
+        userEntityRepo.save(userEntity);
+        return ApiResponse.prompt(IMCode.SC_OK);
+    }
+
 }

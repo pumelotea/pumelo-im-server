@@ -15,7 +15,7 @@ import java.util.Objects;
 @Table(name = "im_user")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UserEntity  extends AbstractBaseEntity {
+public class UserEntity extends AbstractBaseEntity {
 
     @Id
     @Column(nullable = false)
@@ -39,8 +39,11 @@ public class UserEntity  extends AbstractBaseEntity {
     @Column(nullable = false, columnDefinition = "varchar(100) COMMENT '密码'")
     private String password;
 
+    @Column(columnDefinition = "text")
+    private String headImg;
 
-    public boolean isAuthentication(String password){
-        return Objects.equals(this.password, EncryptionUtils.sha1(password+salt));
+
+    public boolean isAuthentication(String password) {
+        return Objects.equals(this.password, EncryptionUtils.sha1(password + salt));
     }
 }
