@@ -87,7 +87,7 @@ public class UserService {
     /**
      * 注册
      *
-     * @return
+     * @return 数字账号
      */
     public ApiResponse<UserVo> register(String name, String password) {
 
