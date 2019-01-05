@@ -20,6 +20,9 @@ public class WsSender implements Sender<WebSocketSession> {
     @Override
     public void sendToUser(String uid, Message message) throws Exception {
         Session session = router.getUser(uid);
+        if (session == null){
+            return;
+        }
         WebSocketSession webSocketSession = (WebSocketSession) session.getConnection();
         synchronized (webSocketSession){
             if (webSocketSession.isOpen()){
